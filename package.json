@@ -1,0 +1,11 @@
+{
+  "name": "@chimanos/typera-zod",
+  "version": "0.0.1",
+  "license": "MIT",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  }
+}
