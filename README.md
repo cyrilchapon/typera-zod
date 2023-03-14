@@ -161,7 +161,7 @@ Each of the above functions also have a `P` flavor that allows the user to overr
 
 ⚠️ Unlike native [typera] [`Parser`], those functions are **curryfied**, taking the error handler first, then the schema
 
-#### `queryP(schema)`
+#### `queryP(errorHandler)(schema)`
 
 ```typescript
 ZodParser.queryP(errorHandler)(schema)
@@ -173,7 +173,7 @@ ZodParser.queryP(errorHandler)(schema)
 | `errorHandler` | `(ZodError) => ErrorResponse` | **Required(inferred)**. Error handler |
 | `schema` | `ZodSchema<T>` | **Required**. The zod schema to validate against |
 
-#### `bodyP(schema)`
+#### `bodyP(errorHandler)(schema)`
 
 ```typescript
 ZodParser.bodyP(errorHandler)(schema)
@@ -185,7 +185,7 @@ ZodParser.bodyP(errorHandler)(schema)
 | `errorHandler` | `(ZodError) => ErrorResponse` | **Required(inferred)**. Error handler |
 | `schema` | `ZodSchema<T>` | **Required**. The zod schema to validate against |
 
-#### `headersP(schema)`
+#### `headersP(errorHandler)(schema)`
 
 ```typescript
 ZodParser.headersP(errorHandler)(schema)
@@ -197,7 +197,7 @@ ZodParser.headersP(errorHandler)(schema)
 | `errorHandler` | `(ZodError) => ErrorResponse` | **Required(inferred)**. Error handler |
 | `schema` | `ZodSchema<T>` | **Required**. The zod schema to validate against |
 
-#### `cookiesP(schema)`
+#### `cookiesP(errorHandler)(schema)`
 
 ```typescript
 ZodParser.cookiesP(errorHandler)(schema)
