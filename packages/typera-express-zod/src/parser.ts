@@ -2,10 +2,8 @@ import { ZodParser as CommonZodParser } from '@chimanos/typera-common-zod'
 import { Response } from 'typera-common'
 import { RequestBase } from 'typera-express'
 
-export type ErrorHandler<
-  T,
-  ErrorResponse extends Response.Generic,
-> = CommonZodParser.ErrorHandler<T, ErrorResponse>
+export type ErrorHandler<ErrorResponse extends Response.Generic> =
+  CommonZodParser.ErrorHandler<ErrorResponse>
 
 const getBody: CommonZodParser.GetInput<RequestBase> = (e) => {
   return e.req.body

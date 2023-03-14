@@ -1,8 +1,8 @@
 import { Middleware, Response } from 'typera-common'
 import { ZodError, ZodSchema } from 'zod'
 
-export type ErrorHandler<T, ErrorResponse extends Response.Generic> = (
-  errors: ZodError<T>,
+export type ErrorHandler<ErrorResponse extends Response.Generic> = (
+  errors: ZodError,
 ) => ErrorResponse
 
 export const bodyP = <RequestBase>(getBody: GetInput<RequestBase>) =>
@@ -41,9 +41,11 @@ const genericP =
     key: Key,
     cloneResult = false,
   ) =>
-  <T, ErrorResponse extends Response.Generic>(
+  <ErrorResponse extends Response.Generic>(
+    errorHandler: ErrorHandler<ErrorResponse>,
+  ) =>
+  <T>(
     codec: ZodSchema<T>,
-    errorHandler: ErrorHandler<T, ErrorResponse>,
   ): Middleware.Middleware<RequestBase, Record<Key, T>, ErrorResponse> =>
   (req: RequestBase) => {
     const parsed = codec.safeParse(input(req))
@@ -76,7 +78,7 @@ const generic =
       input,
       key,
       cloneResult,
-    )(codec, (err) => Response.badRequest(errorToString(key, err)))
+    )((err) => Response.badRequest(errorToString(key, err)))(codec)
 
 const errorToString = <T>(key: string, err: ZodError<T>) => {
   return JSON.stringify({ type: key, error: err })
