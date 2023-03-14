@@ -110,9 +110,7 @@ of your choice. With [Express] you probably want to use [body-parser], and with
 or [Koa] app rather than use them as typera middleware.
 </details>
 
-!!! note
-
-    You must use a Express or Koa body parsing middleware for
+    ⚠️ You must use a Express or Koa body parsing middleware for
     `Parser.body` to work.
 
 #### `headers(schema)`
@@ -163,7 +161,7 @@ Each of the above functions also have a `P` flavor that allows the user to overr
 
 ⚠️ Unlike native [typera] [`Parser`], those functions are **curryfied**, taking the error handler first, then the schema
 
-#### `query(schema)`
+#### `queryP(schema)`
 
 ```typescript
 ZodParser.queryP(errorHandler)(schema)
@@ -175,7 +173,7 @@ ZodParser.queryP(errorHandler)(schema)
 | `errorHandler` | `(ZodError) => ErrorResponse` | **Required(inferred)**. Error handler |
 | `schema` | `ZodSchema<T>` | **Required**. The zod schema to validate against |
 
-#### `body(schema)`
+#### `bodyP(schema)`
 
 ```typescript
 ZodParser.body(schema)
@@ -187,7 +185,7 @@ ZodParser.body(schema)
 | `errorHandler` | `(ZodError) => ErrorResponse` | **Required(inferred)**. Error handler |
 | `schema` | `ZodSchema<T>` | **Required**. The zod schema to validate against |
 
-#### `headers(schema)`
+#### `headersP(schema)`
 
 ```typescript
 ZodParser.headers(schema)
@@ -199,7 +197,7 @@ ZodParser.headers(schema)
 | `errorHandler` | `(ZodError) => ErrorResponse` | **Required(inferred)**. Error handler |
 | `schema` | `ZodSchema<T>` | **Required**. The zod schema to validate against |
 
-#### `cookies(schema)`
+#### `cookiesP(schema)`
 
 ```typescript
 ZodParser.cookies(schema)
