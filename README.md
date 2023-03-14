@@ -176,7 +176,7 @@ ZodParser.queryP(errorHandler)(schema)
 #### `bodyP(schema)`
 
 ```typescript
-ZodParser.body(schema)
+ZodParser.bodyP(errorHandler)(schema)
 ```
 
 | Parameter | Type     | Description                |
@@ -188,7 +188,7 @@ ZodParser.body(schema)
 #### `headersP(schema)`
 
 ```typescript
-ZodParser.headers(schema)
+ZodParser.headersP(errorHandler)(schema)
 ```
 
 | Parameter | Type     | Description                |
@@ -200,7 +200,7 @@ ZodParser.headers(schema)
 #### `cookiesP(schema)`
 
 ```typescript
-ZodParser.cookies(schema)
+ZodParser.cookiesP(errorHandler)(schema)
 ```
 
 | Parameter | Type     | Description                |
