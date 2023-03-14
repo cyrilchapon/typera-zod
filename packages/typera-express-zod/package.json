@@ -8,7 +8,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/cyrilchapon/typera-common-zod.git",
-    "directory": "packages/async-handler"
+    "directory": "packages/typera-express-zod"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
