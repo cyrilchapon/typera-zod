@@ -27,7 +27,7 @@ describe('advanced parser', () => {
           foo: z.literal('bar'),
         })
         const payload = { foo: 'bar' }
-        const output = await (method as any)(getFoo)(errHandlerMock)(schema)({
+        const output = await (method as any)(getFoo)(schema, errHandlerMock)({
           theKey: payload,
         })
         assert.isFalse(isMiddlewareResponse(output))
@@ -42,7 +42,7 @@ describe('advanced parser', () => {
           foo: z.literal('bar'),
         })
         const payload = { foo: 'BAR' }
-        const output = await (method as any)(getFoo)(errHandlerMock)(schema)({
+        const output = await (method as any)(getFoo)(schema, errHandlerMock)({
           theKey: payload,
         })
         assert.isTrue(isMiddlewareResponse(output))

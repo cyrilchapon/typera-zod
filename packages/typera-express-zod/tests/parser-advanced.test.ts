@@ -27,7 +27,10 @@ describe('advanced parser', () => {
           foo: z.literal('bar'),
         })
         const payload = { foo: 'bar' }
-        const output = await (method as any)(errHandlerMock)(schema)({
+        const output = await (method as any)(
+          schema,
+          errHandlerMock,
+        )({
           req: { [methodName]: payload },
         })
         assert.isFalse(isMiddlewareResponse(output))
@@ -44,7 +47,10 @@ describe('advanced parser', () => {
           foo: z.literal('bar'),
         })
         const payload = { foo: 'BAR' }
-        const output = await (method as any)(errHandlerMock)(schema)({
+        const output = await (method as any)(
+          schema,
+          errHandlerMock,
+        )({
           req: { [methodName]: payload },
         })
         assert.isTrue(isMiddlewareResponse(output))
@@ -60,7 +66,10 @@ describe('advanced parser', () => {
         foo: z.literal('bar'),
       })
       const payloadGetter = { get: () => 'bar' }
-      const output = await (headersP as any)(errHandlerMock)(schema)({
+      const output = await (headersP as any)(
+        schema,
+        errHandlerMock,
+      )({
         req: payloadGetter,
       } as unknown as RequestBase)
       assert.isFalse(isMiddlewareResponse(output))
@@ -75,7 +84,10 @@ describe('advanced parser', () => {
         foo: z.literal('bar'),
       })
       const payloadGetter = { get: () => 'BAR' }
-      const output = await (headersP as any)(errHandlerMock)(schema)({
+      const output = await (headersP as any)(
+        schema,
+        errHandlerMock,
+      )({
         req: payloadGetter,
       } as unknown as RequestBase)
       assert.isTrue(isMiddlewareResponse(output))

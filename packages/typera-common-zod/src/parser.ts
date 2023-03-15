@@ -1,9 +1,17 @@
 import { Middleware, Response } from 'typera-common'
-import { ZodError, ZodSchema } from 'zod'
+import { ZodError, ZodFormattedError, ZodSchema } from 'zod'
 
-export type ErrorHandler<ErrorResponse extends Response.Generic> = (
-  errors: ZodError,
-) => ErrorResponse
+export type OptionalHeaders =
+  | {
+      [key: string]: string
+    }
+  | undefined
+
+export type ErrorHandler<
+  T,
+  ErrorT,
+  ErrorResponse extends Response.Response<number, ErrorT, OptionalHeaders>,
+> = (errors: ZodError<T>) => ErrorResponse
 
 export const bodyP = <RequestBase>(getBody: GetInput<RequestBase>) =>
   genericP(getBody, 'body')
@@ -41,14 +49,16 @@ const genericP =
     key: Key,
     cloneResult = false,
   ) =>
-  <ErrorResponse extends Response.Generic>(
-    errorHandler: ErrorHandler<ErrorResponse>,
-  ) =>
-  <T>(
-    codec: ZodSchema<T>,
+  <
+    T,
+    ErrorT,
+    ErrorResponse extends Response.Response<number, ErrorT, OptionalHeaders>,
+  >(
+    schema: ZodSchema<T>,
+    errorHandler: ErrorHandler<T, ErrorT, ErrorResponse>,
   ): Middleware.Middleware<RequestBase, Record<Key, T>, ErrorResponse> =>
   (req: RequestBase) => {
-    const parsed = codec.safeParse(input(req))
+    const parsed = schema.safeParse(input(req))
 
     if (!parsed.success) {
       return Middleware.stop(errorHandler(parsed.error))
@@ -68,18 +78,15 @@ const generic =
     cloneResult = false,
   ) =>
   <T>(
-    codec: ZodSchema<T>,
+    schema: ZodSchema<T>,
   ): Middleware.Middleware<
     RequestBase,
     Record<Key, T>,
-    Response.BadRequest<string>
-  > =>
-    genericP(
+    Response.BadRequest<ZodFormattedError<T>>
+  > => {
+    return genericP(
       input,
       key,
       cloneResult,
-    )((err) => Response.badRequest(errorToString(key, err)))(codec)
-
-const errorToString = <T>(key: string, err: ZodError<T>) => {
-  return JSON.stringify({ type: key, error: err })
-}
+    )(schema, (err) => Response.badRequest(err.format()))
+  }
