@@ -16,6 +16,8 @@ npm install @chimanos/typera-express-zod
 
 ## Usage
 
+### Basic
+
 ```typescript
 import { Parser, Response, Route, URL, route } from 'typera-express'
 import { z, ZodSchema } from 'zod'
@@ -53,6 +55,44 @@ const updateUser: Route<
     return Response.ok(user)
   })
 ```
+
+Just like your usual native [Typera].[`Parser`], but with a [Zod] schema — instead of io-ts codec.
+
+### Extended Zod features
+
+#### Coercion
+
+`ZodParser` is compatible with most [Zod] features, including [`coerce`] and extended methods (like `min(n)` or `email()` for example).
+
+— Particularly useful when decoding query strings
+
+```typescript
+const querySchema = z.object({
+  limit: z.coerce.number().min(0).max(50)
+  skip: z.coerce.number().min(0).optional()
+})
+
+route
+// ...
+  .use(ZodParser.query(querySchema))
+// ...
+```
+
+#### DTO Typings
+
+If you want to extract your payloads typings for external usage, just use [Zod] [`z.infer`] method.
+
+```typescript
+const userBodySchema = z.object({
+    name: z.string(),
+    age: z.number()
+}).strict()
+
+type UserBodyPayload = z.infer<typeof userBodySchema>
+
+// ...
+```
+
 ## API Reference
 
 ### Classic parsers
