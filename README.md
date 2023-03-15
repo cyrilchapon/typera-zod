@@ -20,7 +20,7 @@ npm install @chimanos/typera-express-zod
 
 ```typescript
 import { Parser, Response, Route, URL, route } from 'typera-express'
-import { z, ZodSchema } from 'zod'
+import { z, ZodSchema, ZodFormattedError } from 'zod'
 import { ZodParser } from '@chimanos/typera-express-zod'
 
 interface User {
@@ -36,7 +36,9 @@ const userBodySchema = z.object({
 }).strict()
 
 const updateUser: Route<
-  Response.Ok<User> | Response.NotFound | Response.BadRequest<string>
+  | Response.Ok<User>
+  | Response.NotFound
+  | Response.BadRequest<ZodFormattedError<User>>
 > = route
   .put('/user/:id(int)')
   // Use userBodySchema to parse request body
@@ -91,6 +93,38 @@ const userBodySchema = z.object({
 type UserBodyPayload = z.infer<typeof userBodySchema>
 
 // ...
+```
+
+#### Error handling
+
+By default, when encountering an validation error, ZodParser produces a response of type :
+```typescript
+Response.BadRequest<ZodFormattedError<T>>
+```
+— with T being the the underlying type of the given schema (`ZodSchema<T>`) and `ZodFormattedError` being the return type of [`zodError.format()`].
+
+If you'd prefer to [`zodError.flatten()`] errors, you can do so by instanciating a custom parser, like so :
+
+```typescript
+// FlattenedError Type
+import { typeToFlattenedError } from 'zod'
+
+const userBodySchema = z.object({
+    name: z.string(),
+    age: z.number()
+}).strict()
+
+const updateUser: Route<
+  // ...
+  | Response.BadRequest<typeToFlattenedError<User>>
+> = route
+  // ...
+  .use(ZodParser.bodyP(
+    userBodySchema,
+    // Flatten error and return it into 400
+    (err) => Response.BadRequest(err.flatten())
+  ))
+  // ...
 ```
 
 ## API Reference
@@ -199,54 +233,56 @@ ZodParser.cookies(schema)
 
 Each of the above functions also have a `P` flavor that allows the user to override error handling. In addition to a [zod] schema, these functions take an error handler function that receives a `ZodError` and produces an `ErrorResponse`.
 
-⚠️ Unlike native [typera] [`Parser`], those functions are **curryfied**, taking the error handler first, then the schema
-
-#### `queryP(errorHandler)(schema)`
+#### `queryP(schema, errorHandler)`
 
 ```typescript
-ZodParser.queryP(errorHandler)(schema)
+ZodParser.queryP(schema, errorHandler)
 ```
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
 | `T` | `Generic Type` | **Optional(inferred)**. The return type |
-| `errorHandler` | `(ZodError) => ErrorResponse` | **Required(inferred)**. Error handler |
+| `ErrorT` | `Generic Type` | **Optional(inferred)**. The generated error type |
+| `errorHandler` | `(ZodError) => Response<number, ErrorT>` | **Required(inferred)**. Error handler |
 | `schema` | `ZodSchema<T>` | **Required**. The zod schema to validate against |
 
-#### `bodyP(errorHandler)(schema)`
+#### `bodyP(schema, errorHandler)`
 
 ```typescript
-ZodParser.bodyP(errorHandler)(schema)
+ZodParser.bodyP(schema, errorHandler)
 ```
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
 | `T` | `Generic Type` | **Optional(inferred)**. The return type |
-| `errorHandler` | `(ZodError) => ErrorResponse` | **Required(inferred)**. Error handler |
+| `ErrorT` | `Generic Type` | **Optional(inferred)**. The generated error type |
+| `errorHandler` | `(ZodError) => Response<number, ErrorT>` | **Required(inferred)**. Error handler |
 | `schema` | `ZodSchema<T>` | **Required**. The zod schema to validate against |
 
-#### `headersP(errorHandler)(schema)`
+#### `headersP(schema, errorHandler)`
 
 ```typescript
-ZodParser.headersP(errorHandler)(schema)
+ZodParser.headersP(schema, errorHandler)
 ```
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
 | `T` | `Generic Type` | **Optional(inferred)**. The return type |
-| `errorHandler` | `(ZodError) => ErrorResponse` | **Required(inferred)**. Error handler |
+| `ErrorT` | `Generic Type` | **Optional(inferred)**. The generated error type |
+| `errorHandler` | `(ZodError) => Response<number, ErrorT>` | **Required(inferred)**. Error handler |
 | `schema` | `ZodSchema<T>` | **Required**. The zod schema to validate against |
 
-#### `cookiesP(errorHandler)(schema)`
+#### `cookiesP(schema, errorHandler)`
 
 ```typescript
-ZodParser.cookiesP(errorHandler)(schema)
+ZodParser.cookiesP(schema, errorHandler)
 ```
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
 | `T` | `Generic Type` | **Optional(inferred)**. The return type |
-| `errorHandler` | `(ZodError) => ErrorResponse` | **Required(inferred)**. Error handler |
+| `ErrorT` | `Generic Type` | **Optional(inferred)**. The generated error type |
+| `errorHandler` | `(ZodError) => Response<number, ErrorT>` | **Required(inferred)**. Error handler |
 | `schema` | `ZodSchema<T>` | **Required**. The zod schema to validate against |
 
 [body-parser]: https://github.com/expressjs/body-parser
@@ -259,3 +295,5 @@ ZodParser.cookiesP(errorHandler)(schema)
 [Zod Schema]: https://github.com/colinhacks/zod#basic-usage
 [Typera]: https://github.com/akheron/typera
 [`Parser`]: https://akheron.github.io/typera/apiref/#request-parsers
+[`zodError.format()`]: https://zod.dev/ERROR_HANDLING?id=formatting-errors
+[`zodError.flatten()`]: https://zod.dev/ERROR_HANDLING?id=flattening-errors
