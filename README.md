@@ -243,7 +243,7 @@ ZodParser.queryP(schema, errorHandler)
 | :-------- | :------- | :------------------------- |
 | `T` | `Generic Type` | **Optional(inferred)**. The return type |
 | `ErrorT` | `Generic Type` | **Optional(inferred)**. The generated error type |
-| `errorHandler` | `(ZodError) => Response<number, ErrorT>` | **Required(inferred)**. Error handler |
+| `errorHandler` | `(ZodError) => Response<number, ErrorT>` | **Required**. Error handler |
 | `schema` | `ZodSchema<T>` | **Required**. The zod schema to validate against |
 
 #### `bodyP(schema, errorHandler)`
@@ -256,7 +256,7 @@ ZodParser.bodyP(schema, errorHandler)
 | :-------- | :------- | :------------------------- |
 | `T` | `Generic Type` | **Optional(inferred)**. The return type |
 | `ErrorT` | `Generic Type` | **Optional(inferred)**. The generated error type |
-| `errorHandler` | `(ZodError) => Response<number, ErrorT>` | **Required(inferred)**. Error handler |
+| `errorHandler` | `(ZodError) => Response<number, ErrorT>` | **Required**. Error handler |
 | `schema` | `ZodSchema<T>` | **Required**. The zod schema to validate against |
 
 #### `headersP(schema, errorHandler)`
@@ -269,7 +269,7 @@ ZodParser.headersP(schema, errorHandler)
 | :-------- | :------- | :------------------------- |
 | `T` | `Generic Type` | **Optional(inferred)**. The return type |
 | `ErrorT` | `Generic Type` | **Optional(inferred)**. The generated error type |
-| `errorHandler` | `(ZodError) => Response<number, ErrorT>` | **Required(inferred)**. Error handler |
+| `errorHandler` | `(ZodError) => Response<number, ErrorT>` | **Required**. Error handler |
 | `schema` | `ZodSchema<T>` | **Required**. The zod schema to validate against |
 
 #### `cookiesP(schema, errorHandler)`
@@ -282,7 +282,7 @@ ZodParser.cookiesP(schema, errorHandler)
 | :-------- | :------- | :------------------------- |
 | `T` | `Generic Type` | **Optional(inferred)**. The return type |
 | `ErrorT` | `Generic Type` | **Optional(inferred)**. The generated error type |
-| `errorHandler` | `(ZodError) => Response<number, ErrorT>` | **Required(inferred)**. Error handler |
+| `errorHandler` | `(ZodError) => Response<number, ErrorT>` | **Required**. Error handler |
 | `schema` | `ZodSchema<T>` | **Required**. The zod schema to validate against |
 
 [body-parser]: https://github.com/expressjs/body-parser
