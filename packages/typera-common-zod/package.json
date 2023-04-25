@@ -1,6 +1,6 @@
 {
   "name": "@chimanos/typera-common-zod",
-  "version": "1.0.4-1",
+  "version": "1.0.4-2",
   "type": "module",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
