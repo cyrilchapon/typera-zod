@@ -1,8 +1,22 @@
 {
   "name": "@chimanos/typera-common-zod",
-  "version": "1.0.2",
+  "version": "1.0.3-1",
   "type": "module",
-  "exports": "./dist/index.js",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/cjs/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    }
+  },
   "license": "MIT",
   "author": "Cyril CHAPON (https://github.com/cyrilchapon)",
   "repository": {
@@ -11,7 +25,9 @@
     "directory": "packages/typera-common-zod"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "yarn build:esm && yarn build:cjs",
+    "build:esm": "tsc -p tsconfig.build.esm.json",
+    "build:cjs": "tsc -p tsconfig.build.cjs.json",
     "typecheck": "tsc -p tsconfig.build.json --noEmit",
     "test": "mocha",
     "dev:test": "mocha --watch --parallel",
