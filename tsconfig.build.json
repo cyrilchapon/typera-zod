@@ -101,7 +101,7 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
   "references": [
-    { "path": "./packages/typera-common-zod/tsconfig.json" },
-    { "path": "./packages/typera-express-zod/tsconfig.json" }
+    { "path": "./packages/typera-common-zod/tsconfig.build.json" },
+    { "path": "./packages/typera-express-zod/tsconfig.build.json" }
   ]
 }

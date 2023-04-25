@@ -1,12 +1,9 @@
 import { describe, it } from 'mocha'
 import { assert } from 'chai'
-import { body, query, cookies, headers } from '../src/parser.js'
+import { body, query, cookies, headers } from '../src/parser'
 import { z } from 'zod'
-import { isMiddlewareResponse } from './_util.js'
-import {
-  MiddlewareResponse,
-  MiddlewareResult,
-} from 'typera-common/middleware.js'
+import { isMiddlewareResponse } from './_util'
+import { MiddlewareResponse, MiddlewareResult } from 'typera-common/middleware'
 import { Response } from 'typera-common'
 
 type ReqMock = { theKey: { foo: string } }

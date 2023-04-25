@@ -7,5 +7,9 @@
     "packages": [
       "packages/*"
     ]
+  },
+  "scripts": {
+    "common": "yarn workspace @chimanos/typera-common-zod",
+    "express": "yarn workspace @chimanos/typera-express-zod"
   }
 }
