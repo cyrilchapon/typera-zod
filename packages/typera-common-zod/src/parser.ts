@@ -1,5 +1,5 @@
 import { Middleware, Response } from 'typera-common'
-import { ZodError, ZodFormattedError, ZodSchema } from 'zod'
+import { ZodError, ZodFormattedError, ZodSchema, ZodTypeDef } from 'zod'
 
 export type OptionalHeaders =
   | {
@@ -50,13 +50,14 @@ const genericP =
     cloneResult = false,
   ) =>
   <
-    T,
+    OutputT,
     ErrorT,
     ErrorResponse extends Response.Response<number, ErrorT, OptionalHeaders>,
+    InputT = OutputT,
   >(
-    schema: ZodSchema<T>,
-    errorHandler: ErrorHandler<T, ErrorT, ErrorResponse>,
-  ): Middleware.Middleware<RequestBase, Record<Key, T>, ErrorResponse> =>
+    schema: ZodSchema<OutputT, ZodTypeDef, InputT>,
+    errorHandler: ErrorHandler<InputT, ErrorT, ErrorResponse>,
+  ): Middleware.Middleware<RequestBase, Record<Key, OutputT>, ErrorResponse> =>
   (req: RequestBase) => {
     const parsed = schema.safeParse(input(req))
 
@@ -77,12 +78,12 @@ const generic =
     key: Key,
     cloneResult = false,
   ) =>
-  <T>(
-    schema: ZodSchema<T>,
+  <OutputT, InputT = OutputT>(
+    schema: ZodSchema<OutputT, ZodTypeDef, InputT>,
   ): Middleware.Middleware<
     RequestBase,
-    Record<Key, T>,
-    Response.BadRequest<ZodFormattedError<T>>
+    Record<Key, OutputT>,
+    Response.BadRequest<ZodFormattedError<InputT>>
   > => {
     return genericP(
       input,

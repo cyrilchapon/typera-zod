@@ -1,6 +1,6 @@
 {
   "name": "@chimanos/typera-common-zod",
-  "version": "1.0.5",
+  "version": "1.1.0-1",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "license": "MIT",
